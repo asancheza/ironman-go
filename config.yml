@@ -1,0 +1,6 @@
+---
+
+hostname: "127.0.0.1"
+username: "vagrant"
+password: "empty"
+driver: '2222'
