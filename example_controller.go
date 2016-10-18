@@ -3,38 +3,54 @@ package main
 import (
 	"fmt"
 	"strings"
+	"io/ioutil"
 	"net/http"
+	"encoding/json"
 )
 
 type Message struct {
     Status string
 }
 
-var example exampleModel
-
 func example_controller(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf(example.Name)
-	fmt.Printf(example.Surname)
+	body, err := ioutil.ReadAll(r.Body)
+	
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Fprintln(w, string(body))
 
 	if strings.Contains(r.URL.Path[1:], "select") {
 		fmt.Printf("Select")
-		example.selectFrom(w)
+		var selectModel exampleModel;
+
+		selectModel.selectFrom(w)
 	}
 
 	if strings.Contains(r.URL.Path[1:], "insert") {
 		fmt.Printf("Insert")
-		example := exampleModel { Name: "Alejandro", Surname: "Sanchez" }
-		example.insert()
+		var insertModel exampleModel;
+		err = json.Unmarshal([]byte(body), &insertModel)
+		fmt.Fprintln(w, insertModel)
+
+		insertModel.insert()
 	}
 
 	if strings.Contains(r.URL.Path[1:], "update") {
 		fmt.Printf("Update")
-		example := exampleModel { Id: 13, Name: "Carlos", Surname: "Sanchez" }
-		example.update()
+		var updateModel exampleModel;
+		err = json.Unmarshal([]byte(body), &updateModel)
+		fmt.Fprintln(w, updateModel)
+		updateModel.update()
 	}
 
 	if strings.Contains(r.URL.Path[1:], "delete") {
 		fmt.Printf("Delete")
-		example.delete(1)
+		var deleteModel exampleModel;
+		err = json.Unmarshal([]byte(body), &deleteModel)
+		fmt.Fprintln(w, deleteModel)
+
+		deleteModel.delete(deleteModel.Id)
 	}
 }

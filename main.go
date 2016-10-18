@@ -24,12 +24,12 @@ func main() {
 	config.readConfiguration();
 
 	var err error
-	db, err = sql.Open(config.Driver, config.Username+":@tcp("+config.Hostname+":"+config.Port+")/"+config.Database)
+	db, err = sql.Open(config.Driver, config.Username + ":@tcp(" + config.Hostname + ":" + config.Port + ")/" + config.Database)
 
 	if err != nil {
 		panic(err)
 	}
 
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":" + config.ServerPort, nil)
 }
