@@ -1,0 +1,32 @@
+FROM ubuntu:trusty
+MAINTAINER Alejandro Sanchez Acosta
+
+ENV HOME=/root
+ENV TERM=xterm-256color
+ENV DEBIAN_FRONTEND=noninteractive
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV GOPATH /code
+ENV PATH=/code/bin/:$PATH
+
+RUN apt-get update 
+
+RUN apt-get -y install \
+    golang \
+    software-properties-common \
+    wget \
+    unzip \
+    man \
+    git \
+    openssh-server \
+    mysql-client \
+    supervisor \
+    make
+
+RUN go get github.com/tools/godep
+
+RUN go get github.com/go-sql-driver/mysql github.com/gorilla/sessions gopkg.in/yaml.v2
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+#CMD ["/usr/bin/supervisord"]

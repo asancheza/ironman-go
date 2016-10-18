@@ -1,0 +1,72 @@
+version: '2'
+networks:
+  front:
+    driver: bridge
+  back:
+    driver: bridge
+services:
+  backend-ui:
+    container_name: "backend-ui"
+    hostname: "backend-ui"
+    networks:
+      - front
+      - back
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/go/
+    restart: "always"
+    privileged: false
+    read_only: false
+    stdin_open: true
+    tty: true
+    links:
+     - backend-storage
+    image: ironman/backend-ui
+  backend-storage:
+    container_name: "backend-storage"
+    hostname: "backend-storage"
+    networks:
+      - back
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+    restart: "always"
+    privileged: false
+    read_only: false
+    stdin_open: true
+    tty: true
+    image: ironman/backend-storage
+  # backend-proxy:
+  #   container_name: "backend-proxy"
+  #   hostname: "backend-proxy"
+  #   networks:
+  #     - front
+  #   ulimits:
+  #     nofile:
+  #       soft: 65535
+  #       hard: 65535
+  #   expose:
+  #     - "6081"
+  #     - "6082"
+  #   ports:
+  #     - "80:6081"
+  #   restart: "always"
+  #   privileged: false
+  #   read_only: false
+  #   stdin_open: true
+  #   tty: true
+  #   links:
+  #    - web
+  #   image: ironman/backend-proxy

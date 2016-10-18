@@ -2,30 +2,39 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"net/http"
-	"encoding/json"
 )
 
 type Message struct {
-    Name string
-    Body string
+    Status string
 }
 
+var example exampleModel
+
 func example_controller(w http.ResponseWriter, r *http.Request) {
-	example := exampleModel { Name: "Alejandro", Surname: "Sanchez" }
+	fmt.Printf(example.Name)
+	fmt.Printf(example.Surname)
 
-	fmt.Fprintf(w, example.Name)
-	fmt.Fprintf(w, example.Surname)
+	if strings.Contains(r.URL.Path[1:], "select") {
+		fmt.Printf("Select")
+		example.selectFrom(w)
+	}
 
-	write(example)
+	if strings.Contains(r.URL.Path[1:], "insert") {
+		fmt.Printf("Insert")
+		example := exampleModel { Name: "Alejandro", Surname: "Sanchez" }
+		example.insert()
+	}
 
-	m := Message{"Status", "400"}
+	if strings.Contains(r.URL.Path[1:], "update") {
+		fmt.Printf("Update")
+		example := exampleModel { Id: 13, Name: "Carlos", Surname: "Sanchez" }
+		example.update()
+	}
 
-	b, err := json.Marshal(m)
-
-	fmt.Fprint(w, b)
-
-	if err != nil {
-		panic(err)
+	if strings.Contains(r.URL.Path[1:], "delete") {
+		fmt.Printf("Delete")
+		example.delete(1)
 	}
 }

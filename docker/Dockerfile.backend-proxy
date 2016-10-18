@@ -1,0 +1,15 @@
+FROM ubuntu:trusty
+MAINTAINER Alejandro Sanchez Acosta
+
+ENV HOME=/root
+ENV TERM=xterm-256color
+ENV DEBIAN_FRONTEND=noninteractive
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+
+RUN apt-get update > /dev/null && apt-get -qqy install \
+    varnish
+
+ADD docker/files/varnish.vcl /etc/varnish/default.vcl
+
+CMD ["/usr/sbin/varnishd", "-F", "-f", "/etc/varnish/default.vcl", "-a", ":6081", "-T", "localhost:6082", "-S", "/etc/varnish/secret", "-s", "malloc,256m"]
