@@ -5,8 +5,11 @@ Ironman go is a framework to create web applications using Go and React
 ## Run 
 
 `make`
+
 `make attach-ui`
+
 `cd /go`
+
 `go run *.go`
 
 ## Logs
