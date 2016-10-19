@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"encoding/json"
+	"html/template"
 )
 
 type Message struct {
@@ -20,6 +21,14 @@ func example_controller(w http.ResponseWriter, r *http.Request) {
     }
 
     fmt.Fprintln(w, string(body))
+
+    if strings.Contains(r.URL.Path[1:], "index") {
+		fmt.Printf("Index")
+
+    	t, _ := template.ParseFiles("views/example.html")
+
+    	t.Execute(w, nil)
+	}
 
 	if strings.Contains(r.URL.Path[1:], "select") {
 		fmt.Printf("Select")
